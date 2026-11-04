@@ -4,6 +4,25 @@
   const menuButton = document.querySelector('.menu-toggle');
   const mobileNav = document.querySelector('#mobile-nav');
   const desktopBreakpoint = window.matchMedia('(min-width: 901px)');
+  const siteHeader = document.querySelector('.site-header');
+  let progressFrame = 0;
+
+  function updateScrollProgress() {
+    progressFrame = 0;
+    const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrolled = scrollableHeight > 0 ? Math.min(1, Math.max(0, window.scrollY / scrollableHeight)) : 1;
+    const initialWidth = Math.min(145, siteHeader?.clientWidth || 145);
+    const progress = initialWidth + ((siteHeader?.clientWidth || initialWidth) - initialWidth) * scrolled;
+    siteHeader?.style.setProperty('--scroll-progress', `${progress}px`);
+  }
+
+  function scheduleScrollProgress() {
+    if (!progressFrame) progressFrame = window.requestAnimationFrame(updateScrollProgress);
+  }
+
+  window.addEventListener('scroll', scheduleScrollProgress, { passive: true });
+  window.addEventListener('resize', scheduleScrollProgress);
+  updateScrollProgress();
 
   function closeMenu(restoreFocus = false) {
     if (!menuButton || !mobileNav) return;
