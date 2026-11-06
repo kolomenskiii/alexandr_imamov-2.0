@@ -90,9 +90,23 @@
         Math.abs(card.offsetLeft - start - reviewTrack.scrollLeft) < Math.abs(cards[closest].offsetLeft - start - reviewTrack.scrollLeft) ? index : closest, 0);
     }
 
+    function setReviewHeight(indices) {
+      if (!indices.length) return;
+      const height = Math.max(...indices.map((index) => cards[index].offsetHeight));
+      if (height) reviewTrack.style.height = `${height}px`;
+    }
+
+    function visibleCardIndices() {
+      const start = cards[0].offsetLeft + reviewTrack.scrollLeft;
+      const end = start + reviewTrack.clientWidth;
+      return cards.flatMap((card, index) =>
+        card.offsetLeft < end - 2 && card.offsetLeft + card.offsetWidth > start + 2 ? [index] : []);
+    }
+
     function updateReviews() {
       const visible = visibleReviews();
       const current = Math.min(currentReview(), cards.length - visible);
+      setReviewHeight(visibleCardIndices());
       previous.disabled = current === 0;
       next.disabled = current >= cards.length - visible;
       const label = visible === 1 ? `${current + 1} из ${cards.length}` : `${current + 1}–${current + visible} из ${cards.length}`;
@@ -101,6 +115,7 @@
 
     function moveReview(direction) {
       const target = Math.max(0, Math.min(currentReview() + direction, cards.length - visibleReviews()));
+      setReviewHeight(cards.slice(target, target + visibleReviews()).map((_, index) => target + index));
       reviewTrack.scrollTo({ left: cards[target].offsetLeft - cards[0].offsetLeft, behavior: 'smooth' });
     }
 
@@ -108,6 +123,8 @@
     next.addEventListener('click', () => moveReview(1));
     reviewTrack.addEventListener('scroll', updateReviews, { passive: true });
     window.addEventListener('resize', updateReviews);
+    document.fonts?.ready.then(updateReviews);
+    reviewTrack.querySelectorAll('img').forEach((img) => img.addEventListener('load', updateReviews));
     reviewControls.hidden = false;
     updateReviews();
   }
