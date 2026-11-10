@@ -36,6 +36,9 @@ p{color:var(--muted)}
 .header-contact{display:flex;align-items:center;gap:14px;flex-shrink:0}
 .header-phone{font-size:11px;font-weight:700;letter-spacing:.02em;white-space:nowrap;color:var(--gold-light)}
 .header-phone:hover,.dialog-phone:hover{color:var(--paper)}
+.header-call{width:50px;height:50px;display:grid;place-items:center;flex:none;background:var(--gold-light);border:1px solid var(--gold-light);color:var(--black);transition:background .2s,border-color .2s}
+.header-call:hover{background:var(--paper);border-color:var(--paper)}
+.header-call svg{display:block;width:25px;height:25px}
 .messenger-links{display:flex;align-items:center;gap:7px}
 .messenger-link{width:38px;height:38px;display:grid;place-items:center;border:1px solid rgba(185,154,88,.45);transition:background .2s,border-color .2s}
 .messenger-link:hover{background:rgba(185,154,88,.12);border-color:var(--gold-light)}
@@ -69,9 +72,13 @@ p{color:var(--muted)}
 .mobile-nav{position:fixed;inset:92px 16px auto;z-index:99;padding:18px 24px 24px;background:var(--dark);border:1px solid var(--line);max-height:calc(100dvh - 110px);overflow:auto}
 .mobile-nav a{display:flex;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--line);font-family:var(--display);font-size:24px}
 .mobile-nav a span{color:var(--gold)}
+.mobile-nav .mobile-phone{justify-content:flex-start;align-items:center;gap:12px;font-size:clamp(17px,5.5vw,22px);white-space:nowrap}
+.mobile-phone span{display:grid;place-items:center;flex:none;width:23px;height:23px}
+.mobile-phone svg{display:block;width:22px;height:22px}
 .hero{padding-top:156px;position:relative;overflow:hidden;background:radial-gradient(ellipse at 100% 10%,rgba(125,17,27,.18),transparent 48%),var(--black)}
 .hero-grid{display:grid;grid-template-columns:1.18fr 1fr;gap:38px;align-items:center}
 .hero-content{position:relative;z-index:2;padding:10px 0 40px}
+.hero-content h1{font-size:clamp(43px,4.8vw,72px);line-height:1.14;max-width:720px}
 h1{font-size:clamp(55px,6.45vw,94px);line-height:1.12;letter-spacing:-.04em}
 .hero-description{max-width:465px;margin-top:30px;font-size:15px;line-height:1.8}
 .hero-actions{display:flex;gap:28px;align-items:center;margin-top:28px}
@@ -98,9 +105,6 @@ h1{font-size:clamp(55px,6.45vw,94px);line-height:1.12;letter-spacing:-.04em}
 .portrait-caption span:first-child{font:400 26px/1.4 var(--display);text-transform:uppercase;letter-spacing:.015em}
 .portrait-caption span:last-child{font-size:10px;color:var(--muted);letter-spacing:.05em}
 .hero-signature{font:italic 500 25px/1.3 var(--serif);color:var(--gold-light);text-align:right;padding-top:22px}
-.hero-bottom{display:flex;justify-content:space-between;border-top:1px solid var(--line);margin-top:28px;padding-block:22px;color:#aca79d;font-size:10px;letter-spacing:.09em;text-transform:uppercase}
-.hero-bottom a{display:flex;align-items:center;gap:28px}
-.hero-bottom a span{font-size:20px;color:var(--gold)}
 .section-intro{display:flex;align-items:flex-end;justify-content:space-between;gap:48px;margin-bottom:48px}
 .services .section-intro{display:block}
 
@@ -113,15 +117,25 @@ h1{font-size:clamp(55px,6.45vw,94px);line-height:1.12;letter-spacing:-.04em}
 .row-arrow{width:42px;height:42px;border:1px solid #c1b29b;display:grid;place-items:center;color:var(--red);transition:background .2s,color .2s}
 .row-arrow svg{display:block;width:20px;height:20px}
 .service-row:hover .row-arrow{background:var(--red);border-color:var(--red);color:var(--paper)}
-.about-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:90px;align-items:center}
+.about{padding:72px 0}
+.about-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:52px;align-items:center}
+.about-certificate{display:block;width:100%;max-width:480px;min-width:0;justify-self:center;padding:12px;background:#fff;border:1px solid rgba(185,154,88,.48);transition:border-color .2s,transform .2s}
+.about-certificate:hover{border-color:var(--gold-light);transform:translateY(-2px)}
+.about-certificate img{display:block;width:100%;height:auto;aspect-ratio:1684/1191;object-fit:contain;background:#fff}
+.about-certificate>span{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 4px 2px;color:#4c4437;font-size:11px;font-weight:700}
+.about-certificate .icon-arrow{color:var(--red);width:19px;height:19px}
 .about-photo{min-height:510px;align-self:stretch}
 .photo-caption{position:absolute;z-index:2;left:30px;bottom:30px;max-width:220px;color:var(--gold-light);font:italic 500 26px/1.2 var(--serif)}
 .about-content h2{font-size:clamp(36px,3.8vw,53px)}
-.about-content>p{font-size:13px;margin-top:20px;max-width:520px}
+.about-content{min-width:0}
+.about-content>p{font-size:13px;margin-top:16px;max-width:520px}
 .about-content .large-copy{font:italic 500 34px/1.2 var(--serif);color:var(--paper);margin-top:28px}
 .about-principles{display:flex;flex-wrap:wrap;gap:8px;margin-top:25px}
 .about-principles span{padding:8px 11px;border:1px solid var(--line);color:var(--gold-light);font-size:10px}
-.about-links{display:flex;flex-wrap:wrap;gap:25px;margin-top:24px}
+.about-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:26px}
+.about-links .text-link{min-height:56px;justify-content:space-between;gap:12px;padding:12px 15px;border:1px solid rgba(185,154,88,.65);background:rgba(185,154,88,.1);font-size:13px;line-height:1.35}
+.about-links .text-link:hover{background:rgba(185,154,88,.18)}
+.about-links .icon-arrow{width:22px;height:22px;flex:none}
 
 
 .process{background:linear-gradient(110deg,#6b101a,#861421 70%,#74101b)}
@@ -155,13 +169,16 @@ h1{font-size:clamp(55px,6.45vw,94px);line-height:1.12;letter-spacing:-.04em}
 .review-arrow{width:40px;height:40px;display:grid;place-items:center;padding:0;border:1px solid #bba989;background:transparent;color:var(--red)}
 .review-arrow svg{display:block;width:20px;height:20px}
 .review-card-image{justify-content:center;gap:14px}
-.review-card-image img{display:block;width:100%;height:auto}
+.review-card-image img{display:block;width:100%;height:auto;margin-top:12px}
 .review-image-caption{padding-top:12px;border-top:1px solid #e9e2d8;color:#625c55;font-size:11px}
 .review-arrow:hover:not(:disabled){background:var(--red);border-color:var(--red);color:white}
 .review-arrow:disabled{opacity:.35}
 .reviews-bottom{display:flex;justify-content:space-between;gap:30px;margin-top:28px;align-items:center}
 .reviews-bottom>p{font-size:10px;line-height:1.8}
 .reviews-links{display:flex;gap:28px}
+.reviews-links .text-link{min-height:54px;padding:10px 14px;border:1px solid #bba989;background:rgba(255,255,255,.4);font-size:13px;gap:18px}
+.reviews-links .text-link:hover{background:white;border-color:var(--red)}
+.reviews-links .text-link .icon-arrow{width:20px;height:20px}
 .faq-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:80px}
 .faq-intro{font-size:13px;margin-top:26px}
 .faq-list{border-top:1px solid var(--line)}
@@ -267,3 +284,10 @@ details[open] summary{color:var(--gold-light)}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
 @media(max-width:650px){.site-header:has(.desktop-nav) .header-cta{display:none}.site-header .header-contact{margin-left:auto}.site-header .messenger-link{width:34px;height:34px}.site-header .messenger-link img{width:20px;height:20px}}
 @media(max-width:370px){.site-header:not(:has(.desktop-nav)) .header-cta{display:none}}
+
+@media(max-width:650px){.reviews-links{flex-direction:column;gap:10px}.reviews-links .text-link{width:100%;justify-content:space-between;font-size:12px}}
+@media(max-width:650px){.site-header{gap:7px}.site-header .header-contact{gap:6px}.site-header .header-call{width:46px;height:46px}.site-header .messenger-link{width:34px;height:34px}}
+@media(max-width:380px){.site-header .brand-logo{display:none}}
+@media(max-width:1150px){.about{padding:64px 0}.about-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:40px}}
+@media(max-width:900px){.about-grid{gap:30px}.about-content h2{font-size:clamp(30px,3.6vw,42px)}}
+@media(max-width:650px){.about{padding:48px 0}.about-grid{gap:24px}.about-content>p{margin-top:12px}.about-links{gap:9px;margin-top:20px}.about-links .text-link{min-height:54px;padding:10px;font-size:11px}.about-certificate{padding:9px}}
