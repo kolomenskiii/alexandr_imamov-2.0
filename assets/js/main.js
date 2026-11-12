@@ -78,11 +78,8 @@
     const previous = reviewControls.querySelector('[data-review-prev]');
     const next = reviewControls.querySelector('[data-review-next]');
     const count = reviewControls.querySelector('.review-count');
-
-    function visibleReviews() {
-      const gap = parseFloat(getComputedStyle(reviewTrack).columnGap) || 0;
-      return Math.max(1, Math.round((reviewTrack.clientWidth + gap) / (cards[0].getBoundingClientRect().width + gap)));
-    }
+    let settleTimer;
+    let activeReview = 0;
 
     function currentReview() {
       const start = cards[0].offsetLeft;
@@ -104,25 +101,43 @@
     }
 
     function updateReviews() {
-      const visible = visibleReviews();
-      const current = Math.min(currentReview(), cards.length - visible);
+      const current = currentReview();
+      activeReview = current;
       setReviewHeight(visibleCardIndices());
       previous.disabled = current === 0;
-      next.disabled = current >= cards.length - visible;
-      const label = visible === 1 ? `${current + 1} из ${cards.length}` : `${current + 1}–${current + visible} из ${cards.length}`;
+      next.disabled = current === cards.length - 1;
+      const label = `${current + 1} из ${cards.length}`;
       if (count.textContent !== label) count.textContent = label;
     }
 
+    function settleReview() {
+      const current = currentReview();
+      const left = cards[current].offsetLeft - cards[0].offsetLeft;
+      if (Math.abs(reviewTrack.scrollLeft - left) > 1) {
+        reviewTrack.scrollTo({ left, behavior: 'smooth' });
+      }
+      setReviewHeight([current]);
+      updateReviews();
+    }
+
     function moveReview(direction) {
-      const target = Math.max(0, Math.min(currentReview() + direction, cards.length - visibleReviews()));
-      setReviewHeight(cards.slice(target, target + visibleReviews()).map((_, index) => target + index));
+      clearTimeout(settleTimer);
+      const target = Math.max(0, Math.min(currentReview() + direction, cards.length - 1));
+      setReviewHeight([target]);
       reviewTrack.scrollTo({ left: cards[target].offsetLeft - cards[0].offsetLeft, behavior: 'smooth' });
     }
 
     previous.addEventListener('click', () => moveReview(-1));
     next.addEventListener('click', () => moveReview(1));
-    reviewTrack.addEventListener('scroll', updateReviews, { passive: true });
-    window.addEventListener('resize', updateReviews);
+    reviewTrack.addEventListener('scroll', () => {
+      updateReviews();
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(settleReview, 160);
+    }, { passive: true });
+    window.addEventListener('resize', () => {
+      reviewTrack.scrollLeft = cards[activeReview].offsetLeft - cards[0].offsetLeft;
+      updateReviews();
+    });
     document.fonts?.ready.then(updateReviews);
     reviewTrack.querySelectorAll('img').forEach((img) => img.addEventListener('load', updateReviews));
     reviewControls.hidden = false;
