@@ -80,6 +80,12 @@
     const count = reviewControls.querySelector('.review-count');
     let settleTimer;
     let activeReview = 0;
+    let groupHeights = [0, 0];
+
+    function visibleReviews() {
+      const gap = parseFloat(getComputedStyle(reviewTrack).columnGap) || 0;
+      return Math.max(1, Math.round((reviewTrack.clientWidth + gap) / (cards[0].getBoundingClientRect().width + gap)));
+    }
 
     function currentReview() {
       const start = cards[0].offsetLeft;
@@ -88,16 +94,26 @@
     }
 
     function setReviewHeight() {
-      const height = Math.max(...cards.map((card) => card.offsetHeight));
+      const height = groupHeights[activeReview + visibleReviews() > 3 ? 1 : 0];
       if (height) reviewTrack.style.height = `${height}px`;
     }
 
+    function measureReviewHeights() {
+      groupHeights = [
+        Math.max(...cards.slice(0, 3).map((card) => card.offsetHeight)),
+        Math.max(...cards.slice(3).map((card) => card.offsetHeight))
+      ];
+      setReviewHeight();
+    }
+
     function updateReviews() {
-      const current = currentReview();
+      const visible = visibleReviews();
+      const current = Math.min(currentReview(), cards.length - visible);
       activeReview = current;
+      setReviewHeight();
       previous.disabled = current === 0;
-      next.disabled = current === cards.length - 1;
-      const label = `${current + 1} из ${cards.length}`;
+      next.disabled = current >= cards.length - visible;
+      const label = visible === 1 ? `${current + 1} из ${cards.length}` : `${current + 1}–${current + visible} из ${cards.length}`;
       if (count.textContent !== label) count.textContent = label;
     }
 
@@ -112,7 +128,8 @@
 
     function moveReview(direction) {
       clearTimeout(settleTimer);
-      const target = Math.max(0, Math.min(currentReview() + direction, cards.length - 1));
+      const visible = visibleReviews();
+      const target = Math.max(0, Math.min(currentReview() + direction * visible, cards.length - visible));
       reviewTrack.scrollTo({ left: cards[target].offsetLeft - cards[0].offsetLeft, behavior: 'smooth' });
     }
 
@@ -124,14 +141,15 @@
       settleTimer = setTimeout(settleReview, 160);
     }, { passive: true });
     window.addEventListener('resize', () => {
-      reviewTrack.scrollLeft = cards[activeReview].offsetLeft - cards[0].offsetLeft;
-      setReviewHeight();
+      const visible = visibleReviews();
+      reviewTrack.scrollLeft = cards[Math.min(activeReview, cards.length - visible)].offsetLeft - cards[0].offsetLeft;
+      measureReviewHeights();
       updateReviews();
     });
-    document.fonts?.ready.then(setReviewHeight);
-    reviewTrack.querySelectorAll('img').forEach((img) => img.addEventListener('load', setReviewHeight));
+    document.fonts?.ready.then(measureReviewHeights);
+    reviewTrack.querySelectorAll('img').forEach((img) => img.addEventListener('load', measureReviewHeights));
     reviewControls.hidden = false;
-    setReviewHeight();
+    measureReviewHeights();
     updateReviews();
   }
 
