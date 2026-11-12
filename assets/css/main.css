@@ -152,7 +152,7 @@ h1{font-size:clamp(55px,6.45vw,94px);line-height:1.12;letter-spacing:-.04em}
 .review-rating>strong{font:400 70px/1 var(--display);color:var(--red);letter-spacing:-.05em}
 .rating-stars{display:block;font:400 16px/1.4 Arial;letter-spacing:3px;color:#8a6b35}
 .review-rating p{font-size:11px;margin-top:7px}
-.review-track{display:grid;grid-auto-flow:column;grid-auto-columns:100%;gap:0;max-width:620px;align-items:start;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-inline:contain;transition:height .3s ease}
+.review-track{display:grid;grid-auto-flow:column;grid-auto-columns:100%;gap:0;max-width:620px;align-items:start;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-inline:contain}
 .review-track::-webkit-scrollbar{display:none}
 .review-card{background:white;border:1px solid #d8d0c5;display:flex;flex-direction:column;align-self:start;height:max-content;min-width:0;padding:22px 24px;scroll-snap-align:start;scroll-snap-stop:always}
 .review-author{display:flex;align-items:center;gap:12px;min-height:42px}

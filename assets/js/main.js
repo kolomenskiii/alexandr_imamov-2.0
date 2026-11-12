@@ -87,23 +87,14 @@
         Math.abs(card.offsetLeft - start - reviewTrack.scrollLeft) < Math.abs(cards[closest].offsetLeft - start - reviewTrack.scrollLeft) ? index : closest, 0);
     }
 
-    function setReviewHeight(indices) {
-      if (!indices.length) return;
-      const height = Math.max(...indices.map((index) => cards[index].offsetHeight));
+    function setReviewHeight() {
+      const height = Math.max(...cards.map((card) => card.offsetHeight));
       if (height) reviewTrack.style.height = `${height}px`;
-    }
-
-    function visibleCardIndices() {
-      const start = cards[0].offsetLeft + reviewTrack.scrollLeft;
-      const end = start + reviewTrack.clientWidth;
-      return cards.flatMap((card, index) =>
-        card.offsetLeft < end - 2 && card.offsetLeft + card.offsetWidth > start + 2 ? [index] : []);
     }
 
     function updateReviews() {
       const current = currentReview();
       activeReview = current;
-      setReviewHeight(visibleCardIndices());
       previous.disabled = current === 0;
       next.disabled = current === cards.length - 1;
       const label = `${current + 1} из ${cards.length}`;
@@ -116,14 +107,12 @@
       if (Math.abs(reviewTrack.scrollLeft - left) > 1) {
         reviewTrack.scrollTo({ left, behavior: 'smooth' });
       }
-      setReviewHeight([current]);
       updateReviews();
     }
 
     function moveReview(direction) {
       clearTimeout(settleTimer);
       const target = Math.max(0, Math.min(currentReview() + direction, cards.length - 1));
-      setReviewHeight([target]);
       reviewTrack.scrollTo({ left: cards[target].offsetLeft - cards[0].offsetLeft, behavior: 'smooth' });
     }
 
@@ -136,11 +125,13 @@
     }, { passive: true });
     window.addEventListener('resize', () => {
       reviewTrack.scrollLeft = cards[activeReview].offsetLeft - cards[0].offsetLeft;
+      setReviewHeight();
       updateReviews();
     });
-    document.fonts?.ready.then(updateReviews);
-    reviewTrack.querySelectorAll('img').forEach((img) => img.addEventListener('load', updateReviews));
+    document.fonts?.ready.then(setReviewHeight);
+    reviewTrack.querySelectorAll('img').forEach((img) => img.addEventListener('load', setReviewHeight));
     reviewControls.hidden = false;
+    setReviewHeight();
     updateReviews();
   }
 
